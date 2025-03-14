@@ -445,9 +445,18 @@ def now_epoch_speed() -> dict:
             closest_epoch_key = epoch_key.decode("utf-8")
             min_time_diff = latest_time_diff
     
-    now_speed = epoch_speed(closest_epoch_key)
+    # get instant speed for now EPOCH
+    now_speed = epoch_speed(closest_epoch_key) # example return type: {'EPOCH':epoch, 'Instantaneous_Speed':instant_speed}
+    # get lat., lon., alt., and geoloc. for now EPOCH
+    now_info = epoch_location(closest_epoch_key) # this is a python dict
 
-    return now_speed
+    return { 'now_EPOCH': now_speed['EPOCH'],
+             'now_speed': now_speed['Instantaneous_Speed'],
+             'now_latitude': now_info['latitude'],
+             'now_longitude': now_info['longitude'],
+             'now_altitude': now_info['altitude'],
+             'now_Nearest_Geolocaiton': now_info['Nearest_Geolocation']
+           }
     
 def compute_speed(x_velocity: float, y_velocity: float, z_velocity: float) -> float:
     """
@@ -498,7 +507,7 @@ def epoch_speed(epoch:str)-> dict:
     # compute instant speed using existing compute_speed() func.
     instant_speed = compute_speed(float(x_dot), float(y_dot), float(z_dot))
 
-    return {'EPOCH':epoch, 'instant speed':instant_speed}
+    return {'EPOCH':epoch, 'Instantaneous_Speed':instant_speed}
 
 
 def compute_location_astropy(sv: dict) -> tuple:
@@ -595,19 +604,18 @@ def epoch_location(epoch: str) -> dict:
     """
     
     state_vec = epoch_data(epoch) # get the state vector for given EPOCH
-    
+    if "error" in state_vec: return jsonify(state_vec)  # Return the error message directly
+
     # get latitude, longitude, and altitude values
     lat, lon, alt = compute_location_astropy(state_vec)
     # check if the function returned any non-floating values:
-    if lat == None:
+    if lat is None or lon is None or alt is None:
         return {'error': 'Failed to Extract Latitude, Longitude, and Height.'}
     
     # get geolocation
     geolocation = compute_nearest_geolocation(lat, lon)
     
-    return jsonify({'latitude':lat, 'longitude': lon, 'altitude':alt, 'Nearest Geolocation':geolocation})
-
-
+    return {'latitude':lat, 'longitude': lon, 'altitude':alt, 'Nearest Geolocation':geolocation}
 
 if __name__ == "__main__":
     #main()

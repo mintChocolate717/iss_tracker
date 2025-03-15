@@ -18,7 +18,7 @@ import redis
 # create Flask object
 app = Flask(__name__)
 # create Redis client
-rd = redis.Redis(host='127.0.0.1', port=6379, db = 7) # TODO: change the host to "redis-db" later
+rd = redis.Redis(host='redis-db', port=6379, db = 7)
 # logging config:
 logging.basicConfig(level=logging.WARNING, format="%(levelname)s: %(message)s")
 
@@ -63,6 +63,7 @@ def read_iss_data() -> List[dict]:
     try:
         limit = int(limit)
     except ValueError:
+        logging.error("<limit> paramter is not an integer.")
         return {'error':'<limit> parameter must be an integer!'}
     
     # how many to skip initially
@@ -70,32 +71,24 @@ def read_iss_data() -> List[dict]:
     try:
         offset = int(offset)
     except ValueError:
+        logging.error("<offset> parameter is not an integer.")
         return {'error':'<offset> parameter must be an integer!'}
 
     # store the entire list into Redis DB:
     for sv in state_vectors:
         # retrieve EPOCH to be used for keys
-        epoch = sv['EPOCH']
-        
-        # check if EPOCH key already exists in the DB:
+        epoch = sv['EPOCH'] 
+        # only add NEW data to the Redis DB:
         if not rd.exists(epoch):
-            print(f"adding new epoch: {epoch}")
+            logging.info(f'Adding new EPOCH: {epoch}')
             # set each key-value pair in the database
             rd.set(epoch, json.dumps(sv))
             # store EPOCH keys for later
             rd.rpush('iss_keys', epoch) # this is a list of EPOCH keys
-        else:
-            # Compare stored data and update if different
-            stored_data = json.loads(rd.get(epoch))
-            if stored_data != sv:
-                logging.info(f"Updating existing EPOCH: {epoch}")
-                rd.set(epoch, json.dumps(sv))
-            else:
-                print("data already exists in the DB")
-                logging.info(f"the data already exists!")
    
-    # check if offset paramter is within dat range 
-    if offset >= len(state_vectors):
+    # check if offset paramter is within the database size
+    if offset >= rd.llen('iss_keys'):
+        logging.error("<offset> parameter is bigger than the length of database.")
         return {'error': '<offset> parameter is out of range! Try smaller number.'}
     
     # retrieve all the data from the DB

@@ -1,0 +1,8 @@
+pytest==7.4.4
+requests==2.31.0
+xmltodict==0.14.2
+Flask==3.0.2
+redis==5.2.1
+geopy==2.4.1
+astropy==7.0.1
+

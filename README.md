@@ -1,4 +1,4 @@
-# ISS Tracker API with Docker Compose
+# ISS Tracker API with Flask, Redis, and Docker-Compose
 
 A Flask-based API that tracks the International Space Station (ISS) in real-time by fetching state vector data from NASA. The API returns positional and velocity details and computes instantaneous speed and geolocation data for given epochs.
 
@@ -6,7 +6,7 @@ A Flask-based API that tracks the International Space Station (ISS) in real-time
 
 ## Data Source
 The ISS state vector data is obtained from NASA's public dataset:  
-🔗 [NASA ISS Data](https://nasa-public-data.s3.amazonaws.com/iss-coords/current/ISS_OEM/ISS.OEM_J2K_EPH.xml)
+🔗 [NASA ISS Data](https://spotthestation.nasa.gov/trajectory_data.cfm)
 
 ---
 
@@ -14,14 +14,14 @@ The ISS state vector data is obtained from NASA's public dataset:
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/yourusername/iss-tracker-api.git
-cd iss-tracker-api
+git clone https://github.com/mintChocolate717/iss-tracker.git
+cd iss-tracker
 ```
 
 ### 2. Launch the Application
 Use Docker Compose to build and run the containers (Redis and Flask API):
 ```bash
-docker-compose up --build
+docker-compose up --build -d
 ```
 The API will be accessible at: **http://127.0.0.1:5000/**
 
@@ -116,22 +116,30 @@ The API will be accessible at: **http://127.0.0.1:5000/**
 ## Running Containerized Unit Tests
 
 The project includes unit tests (using `pytest`) to verify API functionality.
+Make sure the docker is running before running the tests.
 
 ### Run the Tests in the Running Container
 ```bash
-docker-compose exec flask-app pytest /app/test_iss_tracker.py
+pytest test_iss_tracker.py
 ```
 - **Expected Output (example):**
   ```bash
   ============================= test session starts ==============================
-  collected 10 items
+  collected 12 items
   
   test_iss_tracker.py .........                                          [100%]
   
-  ============================== 10 passed in 0.15s ===============================
+  ============================== 12 passed in 0.15s ===============================
   ```
-
 ---
+
+## Ending the application
+When you are done, make sure to remove the running containers.
+
+```bash
+docker-compose down
+```
+
 
 ## Project Structure
 ```

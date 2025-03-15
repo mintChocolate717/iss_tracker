@@ -5,7 +5,7 @@ A Flask-based API that tracks the International Space Station (ISS) in real-time
 ---
 ## Project Structure
 ```
-.
+iss_tracker/
 ├── Dockerfile              # Docker configuration for building the Flask API container
 ├── docker-compose.yml      # Docker Compose configuration for Redis and Flask API services
 ├── requirements.txt        # Project dependencies

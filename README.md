@@ -3,6 +3,19 @@
 A Flask-based API that tracks the International Space Station (ISS) in real-time by fetching state vector data from NASA. The API returns positional and velocity details and computes instantaneous speed and geolocation data for given epochs.
 
 ---
+## Project Structure
+```
+.
+├── Dockerfile              # Docker configuration for building the Flask API container
+├── docker-compose.yml      # Docker Compose configuration for Redis and Flask API services
+├── requirements.txt        # Project dependencies
+├── iss_tracker.py          # Main Flask API application
+├── test_iss_tracker.py     # Unit tests for the API using pytest
+├── diagram.png             # Diagram illustrating API interactions and architecture
+└── README.md               # Project documentation (this file)
+```
+
+---
 
 ## Application Architecture
 ![Diagram of ISS Tracker](diagram.png)
@@ -80,9 +93,11 @@ The API will be accessible at: **http://127.0.0.1:5000/**
 ### 4. Compute ISS Speed for a Specific Epoch
 - **Endpoint:** `GET /epochs/<epoch>/speed`
 - **Description:** Computes the instantaneous speed at the given epoch using the formula:
+  
   $$
-  \text{Speed} = \sqrt{X_{DOT}^2 + Y_{DOT}^2 + Z_{DOT}^2}
+    \text{Speed} = \sqrt{X_{DOT}^2 + Y_{DOT}^2 + Z_{DOT}^2}
   $$
+
 - **Example:**
   ```bash
   curl http://127.0.0.1:5000/epochs/2025-063T12:00:00.000Z/speed
@@ -141,19 +156,6 @@ When you are done, make sure to remove the running containers.
 
 ```bash
 docker-compose down
-```
-
-
-## Project Structure
-```
-.
-├── Dockerfile              # Docker configuration for building the Flask API container
-├── docker-compose.yml      # Docker Compose configuration for Redis and Flask API services
-├── requirements.txt        # Project dependencies
-├── iss_tracker.py          # Main Flask API application
-├── test_iss_tracker.py     # Unit tests for the API using pytest
-├── diagram.png             # Diagram illustrating API interactions and architecture
-└── README.md               # Project documentation (this file)
 ```
 
 ---

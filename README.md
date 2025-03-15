@@ -166,4 +166,3 @@ docker-compose down
 - All error conditions (such as invalid epochs or query parameters) return descriptive error messages.
 
 Happy tracking the ISS!
-```

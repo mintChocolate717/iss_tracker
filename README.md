@@ -4,6 +4,9 @@ A Flask-based API that tracks the International Space Station (ISS) in real-time
 
 ---
 
+## Application Architecture
+![Diagram of ISS Tracker](diagram.png)
+
 ## Data Source
 The ISS state vector data is obtained from NASA's public dataset:  
 🔗 [NASA ISS Data](https://spotthestation.nasa.gov/trajectory_data.cfm)
@@ -14,8 +17,8 @@ The ISS state vector data is obtained from NASA's public dataset:
 
 ### 1. Clone the Repository
 ```bash
-git clone https://github.com/mintChocolate717/iss-tracker.git
-cd iss-tracker
+git clone https://github.com/mintChocolate717/iss_tracker.git
+cd iss_tracker
 ```
 
 ### 2. Launch the Application

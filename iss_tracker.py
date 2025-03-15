@@ -316,14 +316,13 @@ def epoch_location(epoch: str) -> dict:
     
     state_vec = epoch_data(epoch) # get the state vector for given EPOCH
     if "error" in state_vec:
-        print('no state vec')
-        return jsonify(state_vec)  # Return the error message directly
+        return state_vec  # Return the error message directly
 
     # get latitude, longitude, and altitude values
     lat, lon, alt = compute_location_astropy(state_vec)
     # check if the function returned any non-floating values:
     if lat is None or lon is None or alt is None:
-        return jsonify({'error': 'Failed to Extract Latitude, Longitude, and Height.'})
+        return {'error': 'Failed to Extract Latitude, Longitude, and Height.'}
     
     # get geolocation
     geolocation = compute_nearest_geolocation(lat, lon)
